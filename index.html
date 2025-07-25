@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POC Navigator Share</title>
+
+    <style>
+        li {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Native share POC</h1>
+    <p>Use this page to test the native share functionality from your browser.</p>
+    <ul>
+        <li>
+            <button id="share-video-btn">Share Video</button>
+        </li>
+        <li>
+            <button id="share-image-btn">Share Image</button>
+        </li>
+        <li>
+            <button id="share-text-btn">Share Text</button>
+        </li>
+    </ul>
+
+    <script>
+        function share (shareText, shareUrl, shareTitle, shareFile) {
+            if (navigator.share) {
+                navigator.share({
+                    text: shareText,
+                    url: shareUrl,
+                    title: shareTitle,
+                    files: shareFile != null ? [ shareFile ] : undefined
+                });
+            }
+            else {
+                navigator.clipboard.writeText(shareUrl);
+                alert("URL copied to clipboard");
+            }
+        }
+
+
+        var videoBtn = document.getElementById("share-video-btn");
+        videoBtn.onclick = (() => {
+            videoBtn.disabled = true;
+            fetch("/video.mp4")
+                .then(response => response.blob())
+                .then(blob => {
+                    let file = new File([ blob ], "video.mp4", { type: blob.type });
+                    share("this is a text", "http://www.google.com", "this is a title", file);
+                    videoBtn.disabled = false;
+                });
+        });
+
+        var imageBtn = document.getElementById("share-image-btn");
+        imageBtn.onclick = (() => {
+            imageBtn.disabled = true;
+            fetch("/image.png")
+                .then(response => response.blob())
+                .then(blob => {
+                    let file = new File([ blob ], "image.png", { type: blob.type });
+                    share("this is a text", "http://www.google.com", "this is a title", file);
+                    imageBtn.disabled = false;
+                });
+        });
+
+        var textBtn = document.getElementById("share-text-btn");
+        textBtn.onclick = (() => {
+            share("this is a text", "http://www.google.com", "this is a title", null);
+        });
+    </script>
+</body>
+
+</html>
