@@ -48,7 +48,7 @@
         var videoBtn = document.getElementById("share-video-btn");
         videoBtn.onclick = (() => {
             videoBtn.disabled = true;
-            fetch("/video.mp4")
+            fetch("./video.mp4")
                 .then(response => response.blob())
                 .then(blob => {
                     let file = new File([ blob ], "video.mp4", { type: blob.type });
@@ -60,7 +60,7 @@
         var imageBtn = document.getElementById("share-image-btn");
         imageBtn.onclick = (() => {
             imageBtn.disabled = true;
-            fetch("/image.png")
+            fetch("./image.png")
                 .then(response => response.blob())
                 .then(blob => {
                     let file = new File([ blob ], "image.png", { type: blob.type });
